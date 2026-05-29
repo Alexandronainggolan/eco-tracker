@@ -19,7 +19,6 @@ import { getEcoTip } from "./utils/ecoTips";
 import { supabase } from "./services/supabase";
 
 function App() {
-
   const [session, setSession] = useState(null);
   const [page, setPage] = useState("home");
 
@@ -44,6 +43,7 @@ function App() {
     const { data: listener } =
       supabase.auth.onAuthStateChange((event, session) => {
         setSession(session);
+        if (session) setPage("home"); // FIX: auto ke home setelah login
       });
 
     return () => {
@@ -89,23 +89,22 @@ function App() {
   };
 
   return (
-    <Layout setPage={setPage}>
+    <Layout setPage={setPage} page={page}>
 
       {/* NOT LOGIN */}
       {!session && (
-        <div className="min-h-[70vh] flex items-center justify-center px-4">
+        <div className="min-h-screen flex items-center justify-center px-4">
 
-          <div className="bg-white shadow-2xl rounded-[40px] p-8 sm:p-12 text-center max-w-xl w-full">
+          <div className="bg-white shadow-2xl rounded-[30px] p-6 sm:p-10 text-center max-w-md w-full">
 
             <div className="text-5xl mb-6">🌿</div>
 
-            <h1 className="text-4xl sm:text-5xl font-black text-gray-900 mb-4">
+            <h1 className="text-3xl sm:text-4xl font-black mb-3">
               EcoTracker
             </h1>
 
-            <p className="text-gray-500 text-base sm:text-lg mb-8 leading-relaxed">
-              Track aktivitas harianmu, hitung emisi karbon,
-              dan bantu bumi jadi lebih hijau 🌍
+            <p className="text-gray-500 mb-6 text-sm sm:text-base">
+              Track jejak karbonmu dan bantu bumi 🌍
             </p>
 
             <button
@@ -114,7 +113,7 @@ function App() {
                   provider: "google",
                 });
               }}
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-2xl text-lg font-bold"
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-bold"
             >
               Login dengan Google
             </button>
@@ -123,44 +122,40 @@ function App() {
         </div>
       )}
 
-      {/* HOME (FIXED) */}
+      {/* HOME */}
       {session && page === "home" && (
-        <div className="min-h-[70vh] flex items-center justify-center px-4">
+        <div className="min-h-screen flex items-center justify-center px-4">
 
-          <div className="bg-gradient-to-br from-green-50 to-green-100 w-full rounded-[40px] p-8 sm:p-12 lg:p-16">
+          <div className="bg-gradient-to-br from-green-50 to-green-100 w-full max-w-6xl rounded-[30px] p-6 sm:p-10 lg:p-16">
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
 
               {/* LEFT */}
-              <div>
+              <div className="text-center lg:text-left">
 
-                <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full mb-6 text-sm">
-                  🌿 Welcome Back
-                </div>
-
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 mb-4 leading-tight">
+                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black mb-4">
                   Halo{" "}
-                  <span className="text-green-600">
+                  <span className="text-green-600 break-words">
                     {session?.user?.user_metadata?.full_name}
                   </span>
                 </h1>
 
-                <p className="text-gray-600 text-base sm:text-lg mb-8">
-                  Saatnya cek aktivitas harianmu dan bantu bumi jadi lebih hijau 🌍
+                <p className="text-gray-600 mb-6 text-sm sm:text-lg">
+                  Mulai tracking aktivitas harianmu 🌍
                 </p>
 
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
 
                   <button
                     onClick={() => setPage("tracker")}
-                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-2xl font-bold"
+                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-bold"
                   >
                     Mulai Tracker
                   </button>
 
                   <button
                     onClick={handleLogout}
-                    className="bg-white text-red-500 px-6 py-3 rounded-2xl font-bold"
+                    className="bg-white text-red-500 px-6 py-3 rounded-xl font-bold"
                   >
                     Logout
                   </button>
@@ -172,25 +167,20 @@ function App() {
               {/* RIGHT */}
               <div className="flex justify-center">
 
-                <div className="bg-white rounded-[40px] p-8 shadow-xl text-center w-full max-w-sm">
+                <div className="bg-white rounded-2xl p-6 shadow-xl text-center w-full max-w-sm">
 
                   <img
                     src={session?.user?.user_metadata?.avatar_url}
-                    className="w-28 h-28 rounded-full mx-auto border-4 border-green-500 mb-4"
+                    className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-green-500"
                   />
 
-                  <h2 className="text-2xl font-bold">
+                  <h2 className="font-bold text-lg">
                     {session?.user?.user_metadata?.full_name}
                   </h2>
 
-                  <p className="text-gray-500 mb-6">Eco Warrior 🌱</p>
-
-                  <div className="bg-green-500 text-white p-6 rounded-2xl">
-                    <p className="font-bold">Save Earth 🌍</p>
-                    <p className="text-sm mt-2">
-                      Mulai dari langkah kecil setiap hari.
-                    </p>
-                  </div>
+                  <p className="text-gray-500 text-sm">
+                    Eco Warrior 🌱
+                  </p>
 
                 </div>
 
@@ -214,13 +204,13 @@ function App() {
 
       {/* DASHBOARD */}
       {session && page === "dashboard" && (
-        <div className="space-y-10">
+        <div className="space-y-8">
           <Dashboard result={result} />
 
           <div className="flex justify-center">
             <button
               onClick={() => setPage("leaderboard")}
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-2xl font-semibold"
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold"
             >
               Lihat Leaderboard
             </button>
