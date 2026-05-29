@@ -19,6 +19,7 @@ import { getEcoTip } from "./utils/ecoTips";
 import { supabase } from "./services/supabase";
 
 function App() {
+
   const [session, setSession] = useState(null);
   const [page, setPage] = useState("home");
 
@@ -34,7 +35,7 @@ function App() {
     tip: "",
   });
 
-  // AUTH
+  // ================= AUTH =================
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
@@ -43,7 +44,9 @@ function App() {
     const { data: listener } =
       supabase.auth.onAuthStateChange((event, session) => {
         setSession(session);
-        if (session) setPage("home"); // FIX: auto ke home setelah login
+
+        // AUTO KE HOME SETELAH LOGIN
+        if (session) setPage("home");
       });
 
     return () => {
@@ -51,12 +54,12 @@ function App() {
     };
   }, []);
 
-  // SAVE LOCAL
+  // ================= SAVE LOCAL =================
   useEffect(() => {
     saveTrackerData(formData);
   }, [formData]);
 
-  // CALCULATE
+  // ================= CALCULATE =================
   const handleCalculate = async () => {
     const calculation = calculateCarbonFootprint(formData);
     const ecoTip = getEcoTip(formData);
@@ -81,7 +84,7 @@ function App() {
     setPage("dashboard");
   };
 
-  // LOGOUT
+  // ================= LOGOUT =================
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setSession(null);
@@ -91,7 +94,7 @@ function App() {
   return (
     <Layout setPage={setPage} page={page}>
 
-      {/* NOT LOGIN */}
+      {/* ================= NOT LOGIN ================= */}
       {!session && (
         <div className="min-h-screen flex items-center justify-center px-4">
 
@@ -119,10 +122,11 @@ function App() {
             </button>
 
           </div>
+
         </div>
       )}
 
-      {/* HOME */}
+      {/* ================= HOME ================= */}
       {session && page === "home" && (
         <div className="min-h-screen flex items-center justify-center px-4">
 
@@ -193,7 +197,7 @@ function App() {
         </div>
       )}
 
-      {/* TRACKER */}
+      {/* ================= TRACKER ================= */}
       {session && page === "tracker" && (
         <TrackerForm
           formData={formData}
@@ -202,23 +206,27 @@ function App() {
         />
       )}
 
-      {/* DASHBOARD */}
+      {/* ================= DASHBOARD ================= */}
       {session && page === "dashboard" && (
         <div className="space-y-8">
+
           <Dashboard result={result} />
 
           <div className="flex justify-center">
+
             <button
               onClick={() => setPage("leaderboard")}
               className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold"
             >
               Lihat Leaderboard
             </button>
+
           </div>
+
         </div>
       )}
 
-      {/* LEADERBOARD */}
+      {/* ================= LEADERBOARD ================= */}
       {session && page === "leaderboard" && (
         <Leaderboard />
       )}
