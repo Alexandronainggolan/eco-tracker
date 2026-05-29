@@ -1,32 +1,26 @@
-// src/components/Dashboard/Dashboard.jsx
-
 import { Leaf } from "lucide-react";
-
 import MetricCard from "./MetricCard";
 import CarbonGauge from "./CarbonGauge";
-
 import { getBadge } from "../../utils/badges";
 
-export default function Dashboard({
-  result,
-}) {
+export default function Dashboard({ result }) {
 
-  // BADGE
-  const badge =
-    getBadge(result.score);
+  const badge = getBadge(result.score);
 
   return (
 
-    <div className="grid lg:grid-cols-2 gap-10">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
 
       {/* LEFT */}
-      <CarbonGauge
-        totalEmission={result.totalEmission}
-        status={result.status}
-      />
+      <div className="w-full">
+        <CarbonGauge
+          totalEmission={result.totalEmission}
+          status={result.status}
+        />
+      </div>
 
       {/* RIGHT */}
-      <div className="space-y-6">
+      <div className="space-y-5 lg:space-y-6">
 
         {/* CO2 */}
         <MetricCard
@@ -41,34 +35,32 @@ export default function Dashboard({
         />
 
         {/* BADGE */}
-        <div className="bg-white rounded-[32px] shadow-xl p-8 text-center">
+        <div className="bg-white rounded-2xl lg:rounded-[32px] shadow-xl p-5 sm:p-6 lg:p-8 text-center">
 
-          <h2
-            className={`text-4xl font-black mb-4 ${badge.color}`}
-          >
+          <h2 className={`text-2xl sm:text-3xl lg:text-4xl font-black mb-3 lg:mb-4 ${badge.color}`}>
             {badge.title}
           </h2>
 
-          <p className="text-gray-600 text-lg leading-relaxed">
+          <p className="text-gray-600 text-sm sm:text-base lg:text-lg leading-relaxed">
             {badge.quote}
           </p>
 
         </div>
 
         {/* ECO TIPS */}
-        <div className="bg-white rounded-[32px] shadow-xl p-8">
+        <div className="bg-white rounded-2xl lg:rounded-[32px] shadow-xl p-5 sm:p-6 lg:p-8">
 
-          <div className="flex items-center gap-3 mb-5">
+          <div className="flex items-center gap-3 mb-4 lg:mb-5">
 
-            <Leaf className="text-green-600" />
+            <Leaf className="text-green-600 w-5 h-5 sm:w-6 sm:h-6" />
 
-            <h3 className="text-2xl font-black">
+            <h3 className="text-xl sm:text-2xl font-black">
               Daily Eco Tips
             </h3>
 
           </div>
 
-          <p className="text-gray-600 leading-relaxed text-lg">
+          <p className="text-gray-600 text-sm sm:text-base lg:text-lg leading-relaxed">
             {result.tip}
           </p>
 
@@ -77,6 +69,5 @@ export default function Dashboard({
       </div>
 
     </div>
-
   );
 }

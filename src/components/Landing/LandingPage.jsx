@@ -1,6 +1,6 @@
 import { supabase } from "../../services/supabase";
 
-export default function LandingPage({ onLogin }) {
+export default function LandingPage() {
 
   const handleGoogleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -13,19 +13,22 @@ export default function LandingPage({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center text-center px-4">
+    <div className="min-h-screen flex flex-col justify-center items-center text-center px-4 bg-gradient-to-b from-green-50 to-white">
 
-      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
+      {/* TITLE */}
+      <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-green-700 mb-4">
         EcoTracker
       </h1>
 
-      <p className="text-gray-600 text-base sm:text-lg lg:text-xl mb-10 max-w-xl lg:max-w-2xl">
+      {/* SUBTITLE */}
+      <p className="text-gray-600 text-sm sm:text-lg lg:text-xl mb-8 max-w-md sm:max-w-xl">
         Pantau jejak karbonmu dan bantu bumi jadi lebih hijau 🌍
       </p>
 
+      {/* BUTTON */}
       <button
         onClick={handleGoogleLogin}
-        className="bg-green-600 hover:bg-green-700 text-white px-6 sm:px-10 py-4 sm:py-5 rounded-2xl text-lg sm:text-xl font-semibold transition"
+        className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-6 sm:px-10 py-3 sm:py-4 rounded-2xl text-base sm:text-xl font-semibold transition shadow-lg active:scale-95"
       >
         Login dengan Google
       </button>
